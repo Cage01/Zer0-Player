@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Zero Player</string>
+    <string name="app_name">Zer0 Player</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -11,4 +11,7 @@
     <string name="song_category">Songs</string>
     <string name="playlist_button">Playlists</string>
     <string name="music_button">Music</string>
+    <string name="safe_dialog"></string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

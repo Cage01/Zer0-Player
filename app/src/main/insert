@@ -1,0 +1,19 @@
+<?php
+
+$connect = mysqli_connect("localhost","Mason","k74jpa1","testdata");
+
+if(mysqli_connect_errno($connect))
+{
+    echo "Failed to connect to MySQL: " . mysqli_connect_error();
+}
+else
+{
+    echo "success";
+}
+
+$Songs Played = isset($_POST['Songs Played']) ? $_POST['Songs Played'] : '';
+
+$query = mysqli_query($connect, "insert into users (sphone, spassword) values ('$username' ,'$password') ");
+
+mysqli_close($connect);
+?>

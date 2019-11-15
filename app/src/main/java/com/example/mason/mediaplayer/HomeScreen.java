@@ -1,22 +1,17 @@
 package com.example.mason.mediaplayer;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 /**
  * Created by Mason on 7/9/2015.
  */
 public class HomeScreen extends Activity {
-    RelativeLayout relativeLayout;
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -30,8 +25,8 @@ public class HomeScreen extends Activity {
         songCategory.setTypeface(font);
         Button videoCategory = (Button) findViewById(R.id.videosButton);
         videoCategory.setTypeface(font);
-        Button playlistCategory = (Button) findViewById(R.id.playlistButton);
-        playlistCategory.setTypeface(font);
+        Button zStats = (Button) findViewById(R.id.playlistButton);
+        zStats.setTypeface(font);
 
         songCategory.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,18 +44,24 @@ public class HomeScreen extends Activity {
             }
         });
 
-        playlistCategory.setOnClickListener(new View.OnClickListener() {
+        zStats.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Context context = getApplicationContext();
-                CharSequence text = "No playlists yet!";
-                int duration = Toast.LENGTH_SHORT;
-
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                intent.setData(Uri.parse("http://zer0player.com/data.cfm"));
+                startActivity(intent);
             }
         });
 
 
+    }
+
+
+
+    @Override
+    public void onBackPressed(){
+        System.exit(0);
     }
 }

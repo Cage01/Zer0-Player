@@ -1,5 +1,7 @@
 package com.example.mason.mediaplayer;
 
+
+
 /**
  * Created by Mason on 7/22/2015.
  */
@@ -8,13 +10,16 @@ public class Song {
     private String title;
     private String artist;
 
-    public Song(long songID, String songTitle, String songArtist){
+
+    public Song(String songTitle,String songArtist,long songID){
         id=songID;
         title=songTitle;
         artist=songArtist;
     }
 
+
     public long getID(){return id;}
     public String getTitle(){return title;}
     public String getArtist(){return artist;}
+
 }

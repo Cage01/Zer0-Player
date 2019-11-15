@@ -1,13 +1,14 @@
 package com.example.mason.mediaplayer;
 
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.io.File;
 
 
 /**
@@ -15,6 +16,7 @@ import java.io.File;
  */
 public class CategoryVideo extends MediaActivity {
     String path;
+    private int video_column;
 
 
     @Override
@@ -23,30 +25,74 @@ public class CategoryVideo extends MediaActivity {
 
 
         setContentView(R.layout.activity_media);
-        buttons();
-        updateVideos();
+       // updateVideos();
+
+        ListView videoView = (ListView) findViewById(android.R.id.list);
+        VideoAdapter videoAdapter = new VideoAdapter(this, videoList);
+        videoView.setAdapter(videoAdapter);
+
+        getVideoList();
 
 
 
     }
 
-    public void updateVideos() {
-        File home = new File(VIDEO_PATH);
-        if (home.listFiles(new videoFilter()).length > 0) {
-            for (File file : home.listFiles(new videoFilter())) {
-                videos.add(file.getName());
+
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(this, HomeScreen.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void getVideoList(){
+        //query external audio
+        int path;
+        ContentResolver videoResolver = getContentResolver();
+        // Uri musicUri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String sortOrder = MediaStore.Video.Media.DEFAULT_SORT_ORDER;
+        Cursor videoCursor = videoResolver.query(uriVideos, null, null, null, sortOrder);
+      //  ImageView thumbnail = (ImageView) findViewById(R.id.thumbnail);
+
+
+        //iterate over results if valid
+        if (videoCursor != null && videoCursor.moveToFirst()) {
+            //get columns
+        int titleColumn = videoCursor.getColumnIndex
+                (MediaStore.Video.Media.DISPLAY_NAME);
+
+            do {
+              /*  path = videoCursor.getColumnIndex(MediaStore.Video.Media.DATA);
+                String filename = videoCursor.getString(path);
+                Bitmap thumb = ThumbnailUtils.createVideoThumbnail(filename, MediaStore.Images.Thumbnails.MICRO_KIND);
+                thumbnail.setImageBitmap(thumb);*/
+
+                String thisTitle = videoCursor.getString(titleColumn);
+                videoList.add(new Video(thisTitle));
+
+
             }
-            ArrayAdapter<String> songList = new ArrayAdapter<String>(this, R.layout.video_item, videos);
-            setListAdapter(songList);
+            while (videoCursor.moveToNext());
         }
+
     }
+
 
     public void onListItemClick(ListView list, View view, final int position, long id){
-        path = String.valueOf(uriVideo + videos.get(position));
+        //query external audio
+        ContentResolver videoResolver = getContentResolver();
+        // Uri musicUri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String sortOrder = MediaStore.Video.Media.DEFAULT_SORT_ORDER;
+        Cursor videoCursor = videoResolver.query(uriVideos, null, null, null, sortOrder);
+        videoCursor.moveToPosition(position);
+        video_column = videoCursor.getColumnIndex(MediaStore.Video.Media.DATA);
+        String filename = videoCursor.getString(video_column);
+
+
         vidCount = position;
        // Intent intent = new Intent(this, PlayVideo.class);
       //  startActivity(intent);
-        playVid(path);
+        playVid(filename);
     }
 
 

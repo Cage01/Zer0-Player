@@ -8,13 +8,28 @@
     android:layout_height="wrap_content"
     android:textSize="20dp"
     android:text="Song Title"
-    android:singleLine="true"/>
+    android:singleLine="true"
+    android:paddingLeft="5dp"
+    android:layout_alignParentTop="true"
+    android:layout_toRightOf="@+id/imageView2"
+    android:layout_toEndOf="@+id/imageView2" />
 <TextView
 android:id="@+id/song_artist"
 android:layout_width="wrap_content"
 android:layout_height="wrap_content"
     android:text="Artist Name :"
     android:textSize="18dp"
+    android:paddingLeft="5dp"
     android:layout_below="@+id/song_title"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true" /></RelativeLayout>
+    android:layout_toRightOf="@+id/imageView2"
+    android:layout_toEndOf="@+id/imageView2" />
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="60dp"
+        android:id="@+id/imageView2"
+        android:layout_alignBottom="@+id/song_artist"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/art"/>
+</RelativeLayout>

@@ -12,12 +12,12 @@
         android:layout_height="fill_parent"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:id="@+id/relativeLayout">
+        android:id="@+id/relativeLayoutN">
 
         <ImageView
             android:layout_width="170dp"
-            android:layout_height="170dp"
-            android:id="@+id/imageView2"
+            android:layout_height="160dp"
+            android:id="@+id/album_art"
             android:background="@drawable/art"
             android:layout_below="@+id/album_info"
             android:layout_centerHorizontal="true" />
@@ -28,78 +28,90 @@
             android:layout_height="90dp"
             android:id="@+id/skipButton"
             android:background="@drawable/skip_button"
-            android:layout_marginBottom="72dp"
-            android:layout_above="@+id/startButton"
-            android:layout_toRightOf="@+id/startButton"
+            android:layout_marginBottom="110dp"
+            android:layout_above="@+id/playPauseButton"
+            android:layout_toRightOf="@+id/playPauseButton"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
 
-        <Button
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:height="40dp"
-            android:width="40dp"
-            android:clickable="true"
-            android:visibility="visible"
-            android:id="@+id/startButton"
-            android:background="@drawable/play_button"
-            android:layout_alignParentBottom="true"
-            android:layout_alignRight="@+id/playPauseButton"
-            android:layout_alignEnd="@+id/playPauseButton"
-            android:layout_alignTop="@+id/playPauseButton"
-            android:layout_alignLeft="@+id/playPauseButton"
-            android:layout_alignStart="@+id/playPauseButton" />
         <Button
             android:layout_width="150dp"
             android:layout_height="120dp"
             android:height="40dp"
             android:width="40dp"
-            android:clickable="false"
-            android:visibility="invisible"
             android:id="@+id/playPauseButton"
-            android:background="@drawable/play_button"
+            android:background="@drawable/pause_button"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true" />
 
         <Button
             android:layout_width="90dp"
             android:layout_height="90dp"
-            android:id="@+id/button"
+            android:id="@+id/previousButton"
             android:background="@drawable/back_button"
             android:layout_alignTop="@+id/skipButton"
-            android:layout_toLeftOf="@+id/startButton"
+            android:layout_toLeftOf="@+id/playPauseButton"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="110dp" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Artist"
             android:id="@+id/artist_info"
+            android:singleLine="true"
+            android:focusable="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
             android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/imageView2"
-            android:layout_toStartOf="@+id/imageView2" />
+            android:layout_toStartOf="@+id/skipButton"
+            android:layout_marginLeft="25dp"
+            android:layout_toLeftOf="@+id/skipButton"
+            android:textSize="15sp"/>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Album"
             android:id="@+id/album_info"
+            android:singleLine="true"
+            android:focusable="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
             android:layout_below="@+id/artist_info"
             android:layout_alignLeft="@+id/artist_info"
-            android:layout_alignStart="@+id/artist_info" />
+            android:layout_alignStart="@+id/artist_info"
+            android:layout_marginLeft="10dp"
+            android:autoText="false"
+            android:textSize="12sp"
+            />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Song"
             android:id="@+id/song_info"
-            android:layout_below="@+id/imageView2"
-            android:layout_toRightOf="@+id/button"
-            android:layout_toEndOf="@+id/button" />
+            android:layout_below="@+id/album_art"
+            android:layout_toRightOf="@+id/previousButton"
+            android:layout_toEndOf="@+id/previousButton"
+            android:singleLine="true"
+            android:focusable="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:textSize="12sp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/speedView"
+            android:layout_above="@+id/playPauseButton"
+            android:layout_centerHorizontal="true" />
 
     </RelativeLayout>
 

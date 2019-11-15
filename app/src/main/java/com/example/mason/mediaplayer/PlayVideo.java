@@ -47,8 +47,23 @@ public class PlayVideo extends Activity {
             public void onCompletion(MediaPlayer mp) {
                 Intent intent = new Intent(PlayVideo.this, CategoryVideo.class);
                 startActivity(intent);
+                finish();
             }
         });
 
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+
+        vid.pause();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        vid.start();
     }
 }

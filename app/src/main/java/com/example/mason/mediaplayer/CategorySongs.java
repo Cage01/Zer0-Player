@@ -1,92 +1,100 @@
 package com.example.mason.mediaplayer;
 
 
-import android.content.ComponentName;
 import android.content.ContentResolver;
-import android.content.Context;
+import android.content.ContentUris;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.database.Cursor;
-import android.media.MediaMetadataRetriever;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.support.v4.view.GestureDetectorCompat;
-import android.view.GestureDetector;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
+import android.provider.MediaStore;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.MediaController;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by Mason on 7/5/2015.
  */
 
-public class CategorySongs extends MediaActivity{
-    private GestureDetectorCompat gestureDetectorCompat;
-    TextView artist, title;
 
 
+public class CategorySongs extends MediaActivity {
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         setContentView(R.layout.activity_media);
-
-        ListView songView = (ListView)findViewById(android.R.id.list);
+        ListView songView = (ListView) findViewById(android.R.id.list);
         //retrieve list view
-        updateMusic();
-
         //get songs from device
-        getSongList();
-        //sort alphabetically by title
-        Collections.sort(songs, new Comparator<String>() {
-            @Override
-            public int compare(String s1, String s2) {
-                return s1.compareToIgnoreCase(s2);
-            }
-        });
 
-        //sort alphabetically by path name (String)
-        Collections.sort(songList, new Comparator<Song>() {
-            public int compare(Song a, Song b) {
-                return a.getTitle().compareTo(b.getTitle());
-            }
+            getSongList();
 
-        });
+
         //create and set adapter
         SongAdapter songAdt = new SongAdapter(this, songList);
         songView.setAdapter(songAdt);
 
 
+    }
 
-        buttons();
-        gestureDetectorCompat = new GestureDetectorCompat(this, new GestureListener());
+    public void onListItemClick(ListView list, View view, final int position, long id) {
+        ListView lv = (ListView) findViewById(android.R.id.list);
+        lv.setSelector(R.drawable.list_selector);
+
+        ContentResolver musicResolver = getContentResolver();
+        String selection = MediaStore.Audio.Media.IS_MUSIC + "!=0";
+        Cursor musicCursor = musicResolver.query(uriMusicShow, null, selection, null, null);
+        musicCursor.moveToPosition(position);
+        String path1 = musicCursor.getString(musicCursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+
+
+        lv = (ListView) findViewById(android.R.id.list);
+        lv.setSelector(R.drawable.list_selector);
+        songCount = position;
+        System.out.println(songCount);
 
 
 
+        playSong(path1);
+    }
+
+    public void playSong(String path) {
+        Intent intent = new Intent(this, NowPlayingScreen.class);
+        intent.putExtra("path", path);
+        intent.putExtra("position", songCount);
+        startActivity(intent);
     }
 
 
-    public void getSongList(){
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, HomeScreen.class);
+        startActivity(intent);
+        finish();
+    }
+
+
+    public void getSongList() {
         //query external audio
         ContentResolver musicResolver = getContentResolver();
         // Uri musicUri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        Cursor musicCursor = musicResolver.query(uriMusicShow, null, null, null, null);
+        String selection = MediaStore.Audio.Media.IS_MUSIC + "!=0";
+        String sortOrder = MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
+        Cursor musicCursor = musicResolver.query(uriMusicShow, null, selection, null, sortOrder);
         //iterate over results if valid
-        if(musicCursor!=null && musicCursor.moveToFirst()){
+        if (musicCursor != null && musicCursor.moveToFirst()) {
             //get columns
             int titleColumn = musicCursor.getColumnIndex
                     (android.provider.MediaStore.Audio.Media.TITLE);
@@ -94,76 +102,35 @@ public class CategorySongs extends MediaActivity{
                     (android.provider.MediaStore.Audio.Media._ID);
             int artistColumn = musicCursor.getColumnIndex
                     (android.provider.MediaStore.Audio.Media.ARTIST);
+            Long albumId = musicCursor.getLong(musicCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
+
+            Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
+            Uri uri = ContentUris.withAppendedId(sArtworkUri, albumId);
+
+
             //add songs to list
             do {
                 long thisId = musicCursor.getLong(idColumn);
                 String thisTitle = musicCursor.getString(titleColumn);
                 String thisArtist = musicCursor.getString(artistColumn);
-                songList.add(new Song(thisId, thisTitle, thisArtist));
+
+
+
+                songList.add(new Song(thisTitle, thisArtist, thisId));
+
             }
             while (musicCursor.moveToNext());
         }
     }
-
-
-
-
-
-
-
-    public void updateMusic() {
-        File home = new File(MUSIC_PATH);
-        if (home.listFiles(new mp3Filter()).length > 0) {
-            for (File file : home.listFiles(new mp3Filter())) {
-                songs.add(file.getName());
-            }
-          //  ArrayAdapter<String> songList = new ArrayAdapter<String>(this, R.layout.song_item, songs);
-            //setListAdapter(songList);
-
-
-        }
-    }
-
-
-
-
-
-
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        this.gestureDetectorCompat.onTouchEvent(event);
-        return super.onTouchEvent(event);
-    }
-
-
-
-    class GestureListener extends GestureDetector.SimpleOnGestureListener {
-        //handle 'swipe left' action only
-
-        @Override
-        public boolean onFling(MotionEvent event1, MotionEvent event2,
-                               float velocityX, float velocityY) {
-
-         /*
-         Toast.makeText(getBaseContext(),
-          event1.toString() + "\n\n" +event2.toString(),
-          Toast.LENGTH_SHORT).show();
-         */
-
-            if(event2.getX() < event1.getX()){
-                Toast.makeText(getBaseContext(),
-                        "Swipe left - startActivity()",
-                        Toast.LENGTH_SHORT).show();
-
-                //switch another activity
-                Intent intent = new Intent(CategorySongs.this, CategoryVideo.class);
-                startActivity(intent);
-            }
-
-            return true;
-        }
-    }
 }
+
+
+
+
+
+
+
+
+
 
 
