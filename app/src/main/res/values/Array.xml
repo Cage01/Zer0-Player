@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="lists">
+        <item>Songs</item>
+        <item>Videos</item>
+        <item>Artists</item>
+        <item>Albums</item>
+        <item>Playlists</item>
+    </string-array>
+
+</resources>
